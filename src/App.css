@@ -7,6 +7,26 @@
   pointer-events: none;
 }
 
+
+.gui-form{
+  display: flex;
+  flex-direction: column;
+}
+
+.gui-form p{
+  margin: 0 0 .5em 0;
+}
+
+.gui-form label{ 
+  display: flex; 
+  align-items: center;
+}
+
+.gui-form span{
+  user-select:none;
+}
+
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
