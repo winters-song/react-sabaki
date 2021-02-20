@@ -273,7 +273,7 @@
     chalk "^2.0.0"
     js-tokens "^4.0.0"
 
-"@babel/parser@^7.1.0", "@babel/parser@^7.12.13", "@babel/parser@^7.12.17", "@babel/parser@^7.12.3", "@babel/parser@^7.7.0":
+"@babel/parser@^7.1.0", "@babel/parser@^7.12.13", "@babel/parser@^7.12.17", "@babel/parser@^7.12.3", "@babel/parser@^7.7.0", "@babel/parser@^7.8.4":
   version "7.12.17"
   resolved "https://registry.npm.taobao.org/@babel/parser/download/@babel/parser-7.12.17.tgz"
   integrity sha1-vIXS1H2zgJTluyaPx2Fxbn1pOEg=
@@ -786,18 +786,7 @@
   dependencies:
     "@babel/helper-plugin-utils" "^7.12.13"
 
-"@babel/plugin-transform-react-jsx@^7.12.1", "@babel/plugin-transform-react-jsx@^7.12.13":
-  version "7.12.17"
-  resolved "https://registry.npm.taobao.org/@babel/plugin-transform-react-jsx/download/@babel/plugin-transform-react-jsx-7.12.17.tgz"
-  integrity sha1-3SwSmfXibeWEk5iS3jz8GAejjyQ=
-  dependencies:
-    "@babel/helper-annotate-as-pure" "^7.12.13"
-    "@babel/helper-module-imports" "^7.12.13"
-    "@babel/helper-plugin-utils" "^7.12.13"
-    "@babel/plugin-syntax-jsx" "^7.12.13"
-    "@babel/types" "^7.12.17"
-
-"@babel/plugin-transform-react-jsx@^7.12.17":
+"@babel/plugin-transform-react-jsx@^7.12.1", "@babel/plugin-transform-react-jsx@^7.12.13", "@babel/plugin-transform-react-jsx@^7.12.17":
   version "7.12.17"
   resolved "https://registry.npm.taobao.org/@babel/plugin-transform-react-jsx/download/@babel/plugin-transform-react-jsx-7.12.17.tgz#dd2c1299f5e26de584939892de3cfc1807a38f24"
   integrity sha1-3SwSmfXibeWEk5iS3jz8GAejjyQ=
@@ -1127,7 +1116,7 @@
     "@babel/parser" "^7.12.13"
     "@babel/types" "^7.12.13"
 
-"@babel/traverse@^7.1.0", "@babel/traverse@^7.12.1", "@babel/traverse@^7.12.13", "@babel/traverse@^7.12.17", "@babel/traverse@^7.7.0":
+"@babel/traverse@^7.1.0", "@babel/traverse@^7.12.1", "@babel/traverse@^7.12.13", "@babel/traverse@^7.12.17", "@babel/traverse@^7.7.0", "@babel/traverse@^7.8.4":
   version "7.12.17"
   resolved "https://registry.npm.taobao.org/@babel/traverse/download/@babel/traverse-7.12.17.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40babel%2Ftraverse%2Fdownload%2F%40babel%2Ftraverse-7.12.17.tgz"
   integrity sha1-QOyMf/tQLE5Ux/lUktwRuI1xhhk=
@@ -1492,8 +1481,28 @@
 
 "@sabaki/go-board@^1.4.2":
   version "1.4.2"
-  resolved "https://registry.npm.taobao.org/@sabaki/go-board/download/@sabaki/go-board-1.4.2.tgz"
+  resolved "https://registry.npm.taobao.org/@sabaki/go-board/download/@sabaki/go-board-1.4.2.tgz#d18737490f800054e3b52b5ee2f5cacca88ba15e"
   integrity sha1-0Yc3SQ+AAFTjtSte4vXKzKiLoV4=
+
+"@sabaki/i18n@^0.51.1-1":
+  version "0.51.1-1"
+  resolved "https://registry.npm.taobao.org/@sabaki/i18n/download/@sabaki/i18n-0.51.1-1.tgz#9ada8f34d4963c2aedc104284a03bf23d44707f8"
+  integrity sha1-mtqPNNSWPCrtwQQoSgO/I9RHB/g=
+
+"@sabaki/immutable-gametree@^1.9.3":
+  version "1.9.3"
+  resolved "https://registry.npm.taobao.org/@sabaki/immutable-gametree/download/@sabaki/immutable-gametree-1.9.3.tgz#4c46bb82a145097051a5b9376fc0c4d7e68e74f1"
+  integrity sha1-TEa7gqFFCXBRpbk3b8DE1+aOdPE=
+
+"@sabaki/sgf@^3.4.7":
+  version "3.4.7"
+  resolved "https://registry.npm.taobao.org/@sabaki/sgf/download/@sabaki/sgf-3.4.7.tgz#aacc27e788afe052c20034b971bae7014c733dd2"
+  integrity sha1-qswn54iv4FLCADS5cbrnAUxzPdI=
+  dependencies:
+    doken "^1.0.0"
+  optionalDependencies:
+    iconv-lite "0.4.x"
+    jschardet ">=1.0 <3"
 
 "@sinonjs/commons@^1.7.0":
   version "1.8.2"
@@ -4120,6 +4129,24 @@ doctrine@^3.0.0:
   dependencies:
     esutils "^2.0.2"
 
+doken@^1.0.0:
+  version "1.0.2"
+  resolved "https://registry.npm.taobao.org/doken/download/doken-1.0.2.tgz#adeca11e1c5d507687f6c8ce97bfaac3c45e1390"
+  integrity sha1-reyhHhxdUHaH9sjOl7+qw8ReE5A=
+
+dolm@^0.7.3-beta:
+  version "0.7.3-beta"
+  resolved "https://registry.npm.taobao.org/dolm/download/dolm-0.7.3-beta.tgz#c83157011c01e055619789eff33bd7387222789e"
+  integrity sha1-yDFXARwB4FVhl4nv8zvXOHIieJ4=
+  dependencies:
+    "@babel/parser" "^7.8.4"
+    "@babel/traverse" "^7.8.4"
+    globby "^11.0.0"
+    mkdirp "^1.0.3"
+    prettier "1.19.1"
+    slash "^3.0.0"
+    yargs "^15.1.0"
+
 dom-accessibility-api@^0.5.4:
   version "0.5.4"
   resolved "https://registry.npm.taobao.org/dom-accessibility-api/download/dom-accessibility-api-0.5.4.tgz"
@@ -5302,7 +5329,7 @@ globby@11.0.1:
     merge2 "^1.3.0"
     slash "^3.0.0"
 
-globby@^11.0.1:
+globby@^11.0.0, globby@^11.0.1:
   version "11.0.2"
   resolved "https://registry.npm.taobao.org/globby/download/globby-11.0.2.tgz?cache=0&sync_timestamp=1609936472420&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fglobby%2Fdownload%2Fglobby-11.0.2.tgz"
   integrity sha1-GvU4t2ajtUDr+1ijKy4tWJcyHYM=
@@ -5611,7 +5638,7 @@ human-signals@^1.1.1:
   resolved "https://registry.npm.taobao.org/human-signals/download/human-signals-1.1.1.tgz"
   integrity sha1-xbHNFPUK6uCatsWf5jujOV/k36M=
 
-iconv-lite@0.4.24:
+iconv-lite@0.4.24, iconv-lite@0.4.x:
   version "0.4.24"
   resolved "https://registry.npm.taobao.org/iconv-lite/download/iconv-lite-0.4.24.tgz?cache=0&sync_timestamp=1594184325364&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Ficonv-lite%2Fdownload%2Ficonv-lite-0.4.24.tgz"
   integrity sha1-ICK0sl+93CHS9SSXSkdKr+czkIs=
@@ -6629,6 +6656,11 @@ jsbn@~0.1.0:
   version "0.1.1"
   resolved "https://registry.npm.taobao.org/jsbn/download/jsbn-0.1.1.tgz"
   integrity sha1-peZUwuWi3rXyAdls77yoDA7y9RM=
+
+"jschardet@>=1.0 <3":
+  version "2.2.1"
+  resolved "https://registry.npm.taobao.org/jschardet/download/jschardet-2.2.1.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fjschardet%2Fdownload%2Fjschardet-2.2.1.tgz#03b0264669a90c7a5c436a68c5a7d4e4cb0c9823"
+  integrity sha1-A7AmRmmpDHpcQ2poxafU5MsMmCM=
 
 jsdom@^16.4.0:
   version "16.4.0"
@@ -8711,6 +8743,11 @@ prepend-http@^1.0.0:
   version "1.0.4"
   resolved "https://registry.npm.taobao.org/prepend-http/download/prepend-http-1.0.4.tgz"
   integrity sha1-1PRWKwzjaW5BrFLQ4ALlemNdxtw=
+
+prettier@1.19.1:
+  version "1.19.1"
+  resolved "https://registry.npm.taobao.org/prettier/download/prettier-1.19.1.tgz#f7d7f5ff8a9cd872a7be4ca142095956a60797cb"
+  integrity sha1-99f1/4qc2HKnvkyhQglZVqYHl8s=
 
 pretty-bytes@^5.3.0:
   version "5.5.0"
@@ -11433,7 +11470,7 @@ yargs@^13.3.2:
     y18n "^4.0.0"
     yargs-parser "^13.1.2"
 
-yargs@^15.4.1:
+yargs@^15.1.0, yargs@^15.4.1:
   version "15.4.1"
   resolved "https://registry.npm.taobao.org/yargs/download/yargs-15.4.1.tgz?cache=0&sync_timestamp=1613435601170&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fyargs%2Fdownload%2Fyargs-15.4.1.tgz"
   integrity sha1-DYehbeAa7p2L7Cv7909nhRcw9Pg=
