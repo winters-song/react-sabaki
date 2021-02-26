@@ -105,7 +105,8 @@ class Sabaki extends EventEmitter {
           : -this.currentPlayer
       },
       get board() {
-        return gametree.getBoard(this.gameTree, state.treePosition)
+        let b = gametree.getBoard(this.gameTree, state.treePosition)
+        return b
       },
       get winrateData() {
         return [
@@ -657,7 +658,7 @@ class Sabaki extends EventEmitter {
       if (button === 0) {
         if (board.get(vertex) === 0) {
           this.makeMove(vertex, {
-            generateEngineMove: this.state.engineGameOngoing == null
+            generateEngineMove: false //this.state.engineGameOngoing == null
           })
         } else if (
           board.markers[vy][vx] != null &&
@@ -1726,9 +1727,9 @@ class Sabaki extends EventEmitter {
   }
 
   removeNode(treePosition, {suppressConfirmation = false} = {}) {
-    let node = tree.get(treePosition)
     let t = i18n.context('sabaki.node')
     let {gameTree: tree} = this.inferredState
+    let node = tree.get(treePosition)
     let noParent = node.parentId == null
 
     // if (

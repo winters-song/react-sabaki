@@ -1,19 +1,71 @@
+import React, {Component} from 'react'
+import sabaki from '../modules/sabaki'
+import MainView from './MainView'
+import MainMenu from './MainMenu.js'
+import 'antd/dist/antd.css'; 
 
-import React, {useState, useRef, useEffect} from 'react'
-import sabaki from '../modules/sabaki.js'
-import * as gametree from '../modules/gametree.js'
-import * as helper from '../modules/helper.js'
 
-function App() {
+export default class App extends Component{
+  constructor(props) {
+    super(props);
+    this.state = sabaki.state
+  }
 
-  let inferredState = sabaki.inferredState
-  let tree = inferredState.gameTree
+  componentDidMount() {
+    sabaki.on('change', ({change, callback}) => {
+      this.setState(change, callback)
+    })
+  }
 
-  debugger;
+  render(A,B,C) {
+    // Calculate some inferred values
 
-  return (
-    <h1>Hello</h1>
-  )
+    let inferredState = sabaki.inferredState
+    let tree = inferredState.gameTree
+    let scoreBoard, areaMap
+
+    this.state = {...this.state, ...inferredState}
+
+    let {
+      showMenuBar,
+      busy,
+      analysisType,
+      showAnalysis,
+      showCoordinates,
+      coordinatesType,
+      showMoveNumbers,
+      showMoveColorization,
+      showNextMoves,
+      showSiblings,
+      showWinrateGraph,
+      showGameGraph,
+      showCommentBox,
+      showLeftSidebar,
+      engineGameOngoing
+    } = this.state
+
+    return (
+      <>
+        <MainMenu
+          showMenuBar={showMenuBar}
+          disableAll={busy > 0}
+          analysisType={analysisType}
+          showAnalysis={showAnalysis}
+          showCoordinates={showCoordinates}
+          coordinatesType={coordinatesType}
+          showMoveNumbers={showMoveNumbers}
+          showMoveColorization={showMoveColorization}
+          showNextMoves={showNextMoves}
+          showSiblings={showSiblings}
+          showWinrateGraph={showWinrateGraph}
+          showGameGraph={showGameGraph}
+          showCommentBox={showCommentBox}
+          showLeftSidebar={showLeftSidebar}
+          engineGameOngoing={engineGameOngoing}
+        />
+        <MainView {...this.state}  />
+      </>
+    )
+
+  }
 }
-
-export default App;
