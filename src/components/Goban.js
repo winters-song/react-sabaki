@@ -65,17 +65,17 @@ export default class Goban extends Component{
 
   }
 
-  componentWillReceiveProps(nextProps = {}) {
-    if (nextProps.playVariation !== this.props.playVariation) {
-      if (nextProps.playVariation != null) {
-        let {sign, moves, sibling} = nextProps.playVariation
+  componentDidUpdate(prevProps) {
+    if (this.props.playVariation !== prevProps.playVariation) {
+      if (this.props.playVariation != null) {
+        let {sign, moves, sibling} = this.props.playVariation
 
         this.stopPlayingVariation()
         this.playVariation(sign, moves, sibling)
       } else {
         this.stopPlayingVariation()
       }
-    } else if (this.props.treePosition !== nextProps.treePosition) {
+    } else if (prevProps.treePosition !== this.props.treePosition) {
       this.stopPlayingVariation()
     }
   }

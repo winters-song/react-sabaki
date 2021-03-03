@@ -42,18 +42,8 @@ function loadStrings(strings) {
 
 exports.loadFile = function(filename) {
   try {
-    loadStrings(
-      Function(`
-        "use strict"
-
-        let exports = {}
-        let module = {exports}
-
-        ;(() => (${readFileSync(filename, 'utf8')}))()
-
-        return module.exports
-      `)()
-    )
+    let str = require('@sabaki/i18n/src'+filename)
+    loadStrings(str)
   } catch (err) {
     loadStrings({})
   }

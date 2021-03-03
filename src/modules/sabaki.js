@@ -1,14 +1,10 @@
-import fs from 'fs'
 import EventEmitter from 'events'
-import {basename, extname} from 'path'
-// import {v4 as uuid} from 'uuid'
-
 import Board from '@sabaki/go-board'
 import sgf from '@sabaki/sgf'
 
 import i18n from '../i18n.js'
 // import * as dialog from './dialog.js'
-// import * as fileformats from './fileformats/index.js'
+import * as fileformats from './fileformats/index.js'
 import * as gametree from './gametree.js'
 import * as gobantransformer from './gobantransformer.js'
 import * as helper from './helper.js'
@@ -36,6 +32,15 @@ class Sabaki extends EventEmitter {
       gameCurrents: [{}],
       treePosition: emptyTree.root.id,
 
+      // Bars
+
+      selectedTool: 'stone_1',
+      scoringMethod: null,
+      findText: '',
+      findVertex: null,
+      deadStones: [],
+      blockedGuesses: [],
+
       // Goban
 
       highlightVertices: [],
@@ -51,6 +56,45 @@ class Sabaki extends EventEmitter {
       fuzzyStonePlacement: null,
       animateStonePlacement: null,
       boardTransformation: '',
+
+      // Sidebar
+
+      consoleLog: [],
+      showLeftSidebar: setting.get('view.show_leftsidebar'),
+      leftSidebarWidth: setting.get('view.leftsidebar_width'),
+      showWinrateGraph: setting.get('view.show_winrategraph'),
+      showGameGraph: setting.get('view.show_graph'),
+      showCommentBox: setting.get('view.show_comments'),
+      sidebarWidth: setting.get('view.sidebar_width'),
+      graphGridSize: null,
+      graphNodeSize: null,
+
+      // Engines
+
+      engines: null,
+      attachedEngineSyncers: [],
+      analyzingEngineSyncerId: null,
+      blackEngineSyncerId: null,
+      whiteEngineSyncerId: null,
+      engineGameOngoing: null,
+      analysisTreePosition: null,
+      analysis: null,
+
+      // Drawers
+
+      preferencesTab: 'general',
+
+      // Input Box
+
+      showInputBox: false,
+      inputBoxText: '',
+      onInputBoxSubmit: helper.noop,
+      onInputBoxCancel: helper.noop,
+
+      // Info Overlay
+
+      infoOverlayText: '',
+      showInfoOverlay: false
     }
 
     this.events = new EventEmitter()
@@ -97,6 +141,9 @@ class Sabaki extends EventEmitter {
       },
       get lastPlayer() {
         let node = this.gameTree.get(state.treePosition)
+        if(!node) {
+          return
+        }
 
         return 'B' in node.data
           ? 1
@@ -372,58 +419,24 @@ class Sabaki extends EventEmitter {
     let t = i18n.context('sabaki.file')
 
     if (!filename) {
-      // let result = dialog.showOpenDialog({
-      //   properties: ['openFile'],
-      //   filters: [
-      //     ...fileformats.meta,
-      //     {name: t('All Files'), extensions: ['*']}
-      //   ]
-      // })
+    
+      let input = document.createElement('input');
+      input.value = '选择文件';
+      input.type = 'file';
+      input.accept = '.sgf'
+      input.onchange = event => {
+        let file = event.target.files[0];
+        let file_reader = new FileReader();
+        file_reader.onload = async () => {
+          let content = file_reader.result;
 
-      // if (result) filename = result[0]
-      // if (filename)
-      //   this.loadFile(filename, {suppressAskForSave: true, clearHistory})
-
-      // return
+          await this.loadContent(content, 'sgf', {suppressAskForSave, clearHistory}) 
+        };
+        file_reader.readAsText(file, 'UTF-8');
+      };
+      input.click();
+      return
     }
-
-    this.setBusy(true)
-
-    let extension = extname(filename).slice(1)
-    let gameTrees = []
-    let success = true
-    let lastProgress = -1
-
-    try {
-      // let fileFormatModule = fileformats.getModuleByExtension(extension)
-
-      // gameTrees = fileFormatModule.parseFile(filename, evt => {
-      //   if (evt.progress - lastProgress < 0.1) return
-      //   this.window.setProgressBar(evt.progress)
-      //   lastProgress = evt.progress
-      // })
-
-      // if (gameTrees.length == 0) throw true
-    } catch (err) {
-      // dialog.showMessageBox(t('This file is unreadable.'), 'warning')
-      success = false
-    }
-
-    if (success) {
-      await this.loadGameTrees(gameTrees, {
-        suppressAskForSave: true,
-        clearHistory
-      })
-
-      this.setState({representedFilename: filename})
-      this.fileHash = this.generateFileHash()
-
-      if (setting.get('game.goto_end_after_loading')) {
-        this.goToEnd()
-      }
-    }
-
-    this.setBusy(false)
   }
 
   async loadContent(content, extension, options = {}) {
@@ -435,15 +448,15 @@ class Sabaki extends EventEmitter {
     let lastProgress = -1
 
     try {
-      // let fileFormatModule = fileformats.getModuleByExtension(extension)
+      let fileFormatModule = fileformats.getModuleByExtension(extension)
 
-      // gameTrees = fileFormatModule.parse(content, evt => {
-      //   if (evt.progress - lastProgress < 0.1) return
-      //   this.window.setProgressBar(evt.progress)
-      //   lastProgress = evt.progress
-      // })
+      gameTrees = fileFormatModule.parse(content, evt => {
+        if (evt.progress - lastProgress < 0.1) return
+        this.window.setProgressBar(evt.progress)
+        lastProgress = evt.progress
+      })
 
-      // if (gameTrees.length == 0) throw true
+      if (gameTrees.length == 0) throw true
     } catch (err) {
       // dialog.showMessageBox(t('This file is unreadable.'), 'warning')
       success = false
@@ -451,6 +464,10 @@ class Sabaki extends EventEmitter {
 
     if (success) {
       await this.loadGameTrees(gameTrees, options)
+
+      if (setting.get('game.goto_end_after_loading')) {
+        this.goToEnd()
+      }
     }
 
     this.setBusy(false)
@@ -474,6 +491,7 @@ class Sabaki extends EventEmitter {
         gameIndex: 0,
         gameTrees,
         gameCurrents: gameTrees.map(_ => ({})),
+
         boardTransformation: ''
       })
 
@@ -489,13 +507,40 @@ class Sabaki extends EventEmitter {
     }
 
     this.setBusy(false)
-    this.window.setProgressBar(-1)
     this.events.emit('fileLoad')
 
     if (gameTrees.length > 1) {
       await helper.wait(setting.get('gamechooser.show_delay'))
       this.openDrawer('gamechooser')
     }
+  }
+
+  saveFile(filename = null, confirmExtension = true) {
+    let t = i18n.context('sabaki.file')
+
+    this.setBusy(true)
+
+    let data = this.getSGF()
+
+    let blob = new Blob([data], {type: 'text/json'})
+    let e = document.createEvent('MouseEvents')
+    let a = document.createElement('a')
+
+    filename = filename || '1.sgf'
+    a.download = filename
+    a.href = window.URL.createObjectURL(blob)
+    a.dataset.downloadurl = ['text/json', a.download, a.href].join(':')
+
+    e.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null)
+    a.dispatchEvent(e)
+
+    this.setBusy(false)
+    this.setState({representedFilename: filename})
+
+    this.treeHash = this.generateTreeHash()
+    this.fileHash = this.generateFileHash()
+
+    return true
   }
 
   getSGF() {
@@ -631,11 +676,33 @@ class Sabaki extends EventEmitter {
     if (!representedFilename) return null
 
     try {
-      let content = fs.readFileSync(representedFilename, 'utf8')
+      // let content = fs.readFileSync(representedFilename, 'utf8')
+      let content = representedFilename
       return helper.hash(content)
     } catch (err) {}
 
     return null
+  }
+
+  askForSave() {
+    let t = i18n.context('sabaki.file')
+    let hash = this.generateTreeHash()
+
+    if (hash !== this.treeHash) {
+      let answer = window.confirm("Your changes will be lost if you close this file without saving.")
+
+      if(answer){
+        this.saveFile(this.state.representedFilename)
+      }
+      // let answer = dialog.showMessageBox(
+      //   t('Your changes will be lost if you close this file without saving.'),
+      //   'warning',
+      //   [t('Save'), t('Don’t Save'), t('Cancel')],
+      //   2
+      // )
+    }
+
+    return true
   }
   // Playing
 
@@ -1264,6 +1331,11 @@ class Sabaki extends EventEmitter {
     }
   }
 
+  /**
+   * 前进后退：
+      前进： goStep(1)
+      后退： goStep(-1)
+   */
   goStep(step) {
     let {gameTrees, gameIndex, gameCurrents, treePosition} = this.state
     let tree = gameTrees[gameIndex]
@@ -1345,13 +1417,18 @@ class Sabaki extends EventEmitter {
       this.setCurrentTreePosition(tree, newTreePosition)
   }
 
+  /**
+   * 跳转到开局
+   */
   goToBeginning() {
     let {gameTrees, gameIndex} = this.state
     let tree = gameTrees[gameIndex]
 
     this.setCurrentTreePosition(tree, tree.root.id)
   }
-
+  /**
+   * 跳转到终局
+   */
   goToEnd() {
     let {gameTrees, gameIndex, gameCurrents} = this.state
     let tree = gameTrees[gameIndex]
@@ -1522,7 +1599,11 @@ class Sabaki extends EventEmitter {
   }
 
   getPlayer(treePosition) {
-    let {data} = this.inferredState.gameTree.get(treePosition)
+    let node = this.inferredState.gameTree.get(treePosition)
+    if(!node){
+      return
+    }
+    let data = node.data
 
     return data.PL != null
       ? data.PL[0] === 'W'
